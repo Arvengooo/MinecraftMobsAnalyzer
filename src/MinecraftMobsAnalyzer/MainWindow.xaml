@@ -1,0 +1,44 @@
+<Window x:Class="MinecraftMobsAnalyzer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:MinecraftMobsAnalyzer.Converters"
+        Title="Анализатор мобов Minecraft" Height="600" Width="900">
+    <Window.Resources>
+        <conv:ListToStringConverter x:Key="ListToStringConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <WrapPanel Grid.Row="0" Margin="5">
+            <Button Content="Спарсить данные"      Command="{Binding ParseCommand}"           Margin="5" Padding="10,5"/>
+            <Button Content="Загрузить из БД"      Command="{Binding LoadFromDbCommand}"      Margin="5" Padding="10,5"/>
+            <Button Content="Удалить выбранного"   Command="{Binding DeleteSelectedCommand}"  Margin="5" Padding="10,5"/>
+            <Button Content="Удалить всё"          Command="{Binding DeleteAllCommand}"       Margin="5" Padding="10,5"/>
+            <Button Content="Обновить выбранного"  Command="{Binding UpdateCommand}"          Margin="5" Padding="10,5"/>
+            <Button Content="Создать отчёт (Word)" Command="{Binding GenerateReportCommand}"  Margin="5" Padding="10,5"/>
+            <Button Content="Таблица (Excel)"      Command="{Binding GenerateChartCommand}"   Margin="5" Padding="10,5"/>
+        </WrapPanel>
+
+        <DataGrid Grid.Row="1"
+                  ItemsSource="{Binding MobList}"
+                  SelectedItem="{Binding SelectedMob}"
+                  AutoGenerateColumns="False" Margin="5" IsReadOnly="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding MobName}" Width="150"/>
+                <DataGridTextColumn Header="Здоровье" Binding="{Binding MobHealth}" Width="100"/>
+                <DataGridTextColumn Header="Локации" Binding="{Binding Locations, Converter={StaticResource ListToStringConverter}}" Width="*"/>
+                <DataGridTextColumn Header="Добыча"  Binding="{Binding Drops,     Converter={StaticResource ListToStringConverter}}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Text="{Binding IsBusy, StringFormat=Занят: {0}}" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>
